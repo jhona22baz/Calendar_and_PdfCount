@@ -1,4 +1,4 @@
-Code made in my social service that resolve some problems.
+**Code made in my social service that solve some problems.
 *how many pages has a pdf
-*and how to send and change an appointment event in outlook 
+*how to send and change an appointment event in outlook 
 
