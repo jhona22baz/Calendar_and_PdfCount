@@ -6,7 +6,7 @@ Imports Outlook = Microsoft.Office.Interop.Outlook
 Module pruebas
 
 
-    Public Function ModifyCalendar() As Boolean
+    Public Function ModifyCalendar(invitados As List(Of String)) As Boolean
 
         Dim oApp As Outlook.Application = New Outlook.Application()
         ' Get the NameSpace and Logon information.
@@ -15,7 +15,7 @@ Module pruebas
         Dim oNS As Outlook.NameSpace = oApp.GetNamespace("mapi")
 
         'Log on by using a dialog box to choose the profile
-        oNS.Logon(Reflection.Missing.Value, Reflection.Missing.Value, True, True)
+        'oNS.Logon(Reflection.Missing.Value, Reflection.Missing.Value, True, True)
 
         'Alternate logon method that uses a specific profile.        
         'oNS.Logon("jhonatan.bazalduao@uanl.mx", "contraseña", False, True)
@@ -48,16 +48,16 @@ Module pruebas
 
         'this is an exemple of how modify some common properties.
         'oAppt.Subject = "cumpleaños"
-        oAppt.Start = DateTime.Now.AddDays(5)
-        oAppt.End = DateTime.Now.AddDays(5)
+        'oAppt.Start = DateTime.Now.AddDays(5)
+        'oAppt.End = DateTime.Now.AddDays(5)
 
         'oAppt.Body = "this is an example of how to change a calendar event."        
 
-        oAppt.Send() ' to send the mail 
-        oAppt.Save() ' to save the changes
+        'oAppt.Send() ' to send the mail 
+        'oAppt.Save() ' to save the changes
         'oAppt.Display(True) 'Show the item 
 
-        ' with this you can see all the recipients and if they accept the appoitment or not
+        'with this you can see all the recipients and if they accept the appoitment or not
         'If Not IsNothing(oAppt) Then
         'Dim recipients As Outlook.Recipients = oAppt.Recipients
         'Dim recipient As Outlook.Recipient = Nothing
@@ -65,10 +65,24 @@ Module pruebas
 
         'Console.WriteLine(recipients.Count().ToString())
 
-        ' For Each recipient In recipients
+        'For Each recipient In recipients
         'Console.WriteLine(recipient.Name + " :: Meeting Status = " + recipient.MeetingResponseStatus.ToString())
         'Next
         'End If
+
+
+        ' Add attendees.
+        Dim oRecipts As Outlook.Recipients = oAppt.Recipients
+        ' Add required attendee.
+        Dim oRecipt As Outlook.Recipient
+
+        For Each invitado In invitados
+            Console.WriteLine(invitado)
+            oRecipt = oRecipts.Add(invitado)
+            oRecipt.Type = Outlook.OlMeetingRecipientType.olRequired
+            oRecipts.ResolveAll()
+        Next
+        oAppt.Send()
 
         'Done. Log off.
         oNS.Logoff()
@@ -130,12 +144,133 @@ Module pruebas
     End Function
 
 
+    Public Function SendMail2()
+        Try
+
+            '        ' Create an Outlook application.
+            Dim oApp As Outlook.Application = New Outlook.Application()
+
+
+            ' Get Mapi NameSpace and Logon.
+            Dim oNS As Outlook.NameSpace = oApp.GetNamespace("mapi")
+            'oNS.Logon("amabely.rosalese@uanl.mx", Reflection.Missing.Value, False, True) ' TODO:
+            'oNS.Logon("jhonatan.bazalduao@uanl.mx", "contraseña", False, True)
+
+            ' Create an AppointmentItem.
+            Dim oAppt As Outlook._AppointmentItem = oApp.CreateItem(Outlook.OlItemType.olAppointmentItem)
+            '        'oAppt.Display(true)  'Modal
+            '        ' Change AppointmentItem to a Meeting. 
+            oAppt.MeetingStatus = Outlook.OlMeetingStatus.olMeeting
+
+            '        ' Set some common properties.
+            oAppt.Subject = "Reunion Directiva example 2.5"
+            oAppt.Body = "it's a little example of how to send a new appointment :D"
+            oAppt.Location = "dgi"
+
+            oAppt.Start = Convert.ToDateTime("20/03/2014 07:00 p. m.")
+            oAppt.End = Convert.ToDateTime("20/03/2014 08:00 p. m.")
+
+            oAppt.ReminderSet = True
+            oAppt.ReminderMinutesBeforeStart = 25
+            oAppt.BusyStatus = Outlook.OlBusyStatus.olBusy  '  olBusy
+            oAppt.IsOnlineMeeting = False
+            oAppt.AllDayEvent = False
+
+            ' Add attendees.
+            Dim oRecipts As Outlook.Recipients = oAppt.Recipients
+
+            ' Add required attendee.
+            Dim oRecipt As Outlook.Recipient
+            oRecipt = oRecipts.Add("jhona.baz@outlook.com") ' TODO:   
+            oRecipt = oRecipts.Add("jhona.22.baz@gmail.com") ' TODO:   
+            oRecipt.Type = Outlook.OlMeetingRecipientType.olRequired
+            oRecipts.ResolveAll()
+            'oAppt.Display(true)
+            '        ' Send out request.
+            oAppt.Send()
+            '        ' Logoff.
+            oNS.Logoff()
+
+        Catch ex As Exception
+            Console.WriteLine("error {0}", ex)
+            Return 0
+        End Try
+        '    Catch ex As Exception
+        Return 1
+    End Function
+
+    Public Function CrearNuevaRevision(ByVal asunto As String, ByVal fechaInicio As String, ByVal fechaLimite As String, ByVal cuerpoTarea As String, ByVal ubicacion As String, invitados As List(Of String)) As String
+        Try
+
+            ' Create an Outlook application.
+            Dim oApp As Outlook.Application = New Outlook.Application()
+            ' Get Mapi NameSpace and Logon.
+            Dim oNS As Outlook.NameSpace = oApp.GetNamespace("mapi")
+            ' Create an AppointmentItem.
+            Dim oAppt As Outlook._AppointmentItem = oApp.CreateItem(Outlook.OlItemType.olAppointmentItem)
+            'oAppt.Display(true)  'Modal
+            ' Change AppointmentItem to a Meeting. 
+            oAppt.MeetingStatus = Outlook.OlMeetingStatus.olMeeting
+            ' Set the properties
+            oAppt.Subject = asunto
+            oAppt.Body = cuerpoTarea
+            oAppt.Location = ubicacion
+            oAppt.Start = Convert.ToDateTime(fechaInicio)
+            oAppt.End = Convert.ToDateTime(fechaLimite)
+            oAppt.ReminderSet = True
+            oAppt.ReminderMinutesBeforeStart = 60
+            oAppt.BusyStatus = Outlook.OlBusyStatus.olBusy  '  olBusy
+            oAppt.IsOnlineMeeting = False
+            oAppt.AllDayEvent = False
+
+            ' Add attendees.
+            Dim oRecipts As Outlook.Recipients = oAppt.Recipients
+            ' Add required attendee.
+            Dim oRecipt As Outlook.Recipient
+
+            For Each invitado In invitados
+                Console.WriteLine(invitado)
+                oRecipt = oRecipts.Add(invitado)
+                oRecipt.Type = Outlook.OlMeetingRecipientType.olRequired
+                oRecipts.ResolveAll()
+            Next
+            oAppt.Send()
+            ' Logoff.
+            oNS.Logoff()
+
+        Catch ex As Exception
+            Console.WriteLine("error {0}", ex)
+            Return 0
+        End Try
+        '    Catch ex As Exception
+        Return 1
+    End Function
+
     Sub Main()
         'Console.WriteLine("{0} paginas ", getNumeroPaginas())
+        Dim mails As List(Of String) = New List(Of String)
+        mails.Add("jhonatan.bazalduao@uanl.mx")
+        mails.Add("jhona.22.baz@gmail.com")
+        mails.Add("jhona.baz@outlook.com")
 
-        If ModifyCalendar() Then
-            Console.WriteLine("modificacion correcta ")
+        Dim FechaInicio As String = "20/03/2014 07:30 p. m."
+        Dim FechaFin As String = "20/03/2014 10:30 p. m."
+        Dim Cuerpo As String = "Otro cuerpo de una revision directiva prueba"
+        Dim Asunto As String = "revision directiva con parametros."
+        Dim ubicacion As String = "UANL, La flama"
+
+
+        'If CrearNuevaRevision(Asunto, FechaInicio, FechaFin, Cuerpo, ubicacion, mails) Then
+        'Console.WriteLine("modificacion correcta ")
+        'End If
+
+        If ModifyCalendar(mails) Then
+            Console.WriteLine(" OK    ")
         End If
+
+        'If SendMail2() Then
+        'Console.WriteLine("modificacion correcta ")
+        'End If
 
         Console.ReadLine()
     End Sub
