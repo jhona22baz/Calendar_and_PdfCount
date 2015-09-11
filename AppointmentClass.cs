@@ -16,10 +16,9 @@ namespace OutlookClassLibrary
             try
             {
                 ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2010);
-                service.UseDefaultCredentials = true; //sistema.calidad CG29dgi
-                //service.Credentials = new WebCredentials("sistema.calidad", "CG29dgi", "uanl");
-                service.Credentials = new WebCredentials("jhonatan.bazalduao", "ZB18dgi", "uanl");//@uanl.mx                
-                service.AutodiscoverUrl("jhonatan.bazalduao@uanl.mx");
+                service.UseDefaultCredentials = true; 
+                service.Credentials = new WebCredentials("XXXXXXXXX", "XXXXX", "XXXX");//@uanl.mx                
+                service.AutodiscoverUrl("XXXXXXX@sitio.com");
 
                 Appointment appointment = new Appointment(service);
                 appointment.Subject = subject_;
@@ -46,10 +45,10 @@ namespace OutlookClassLibrary
             try
             {
                 ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2010);
-                service.UseDefaultCredentials = true; //sistema.calidad CG29dgi
-                //service.Credentials = new WebCredentials("sistema.calidad", "CG29dgi", "uanl");
-                service.Credentials = new WebCredentials("jhonatan.bazalduao", "ZB18dgi", "uanl");//@uanl.mx                
-                service.AutodiscoverUrl("jhonatan.bazalduao@uanl.mx");
+                service.UseDefaultCredentials = true; 
+               
+                service.Credentials = new WebCredentials("xxxxxxxxxxxx", "xxxxx", "xxxx");//@uanl.mx                
+                service.AutodiscoverUrl("xxxxxxxxxxxxxxxxx");
 
                 string querystring = "Subject:'"+asunto +"'";
                 ItemView view = new ItemView(1);
@@ -98,9 +97,9 @@ namespace OutlookClassLibrary
             try
             {
                 ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2010);
-                service.UseDefaultCredentials = true; //sistema.calidad SC29dgi                
-                service.Credentials = new WebCredentials("jhonatan.bazalduao", "ZB18dgi", "uanl");
-                service.AutodiscoverUrl("jhonatan.bazalduao@uanl.mx");
+                service.UseDefaultCredentials = true;                 
+                service.Credentials = new WebCredentials("xxxxxxxxxxx", "xxxxxx", "xxxx");
+                service.AutodiscoverUrl("xxxxxxxxxxxxxxx");
                 
                 Task taskItem = new Task(service);
                 taskItem.Subject = asunto;
@@ -111,12 +110,6 @@ namespace OutlookClassLibrary
                 //taskItem.Save();
                 taskItem.Save();
 
-                //service.ImpersonatedUserId = new ImpersonatedUserId(ConnectingIdType.SmtpAddress, "jhonatan.bazalduao@uanl.mx");                
-
-                /*Folder newFolder = new Folder(service);
-                newFolder.DisplayName = "TestFolder1";
-                newFolder.Save(WellKnownFolderName.Inbox);
-                */
                 return errorTask;
             }
             catch(Exception e)
@@ -131,10 +124,9 @@ namespace OutlookClassLibrary
             try
             {
                 ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2010);
-                service.UseDefaultCredentials = true; //sistema.calidad CG29dgi
-                //service.Credentials = new WebCredentials("sistema.calidad", "CG29dgi", "uanl");
-                service.Credentials = new WebCredentials("jhonatan.bazalduao", "ZB18dgi", "uanl");//@uanl.mx                
-                service.AutodiscoverUrl("jhonatan.bazalduao@uanl.mx");
+                service.UseDefaultCredentials = true; 
+                service.Credentials = new WebCredentials("xxxxxxxxxxxxx", "xxxx", "xxxx");               
+                service.AutodiscoverUrl("xxxxxxxxxxxxxxxxxxxx");
 
                 string querystring = "Subject:'" + asunto + "'";
                 ItemView view = new ItemView(1);
